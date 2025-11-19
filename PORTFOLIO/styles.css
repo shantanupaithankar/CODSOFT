@@ -39,6 +39,10 @@ body {
     font-size: 16px;
 }
 
+.btn i.fa-spinner {
+    margin-right: 8px;
+}
+
 .primary-btn {
     background: var(--primary-color);
     color: white;
