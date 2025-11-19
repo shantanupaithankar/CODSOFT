@@ -115,4 +115,46 @@ document.addEventListener('DOMContentLoaded', function() {
     if (skillsSection && isElementInViewport(skillsSection)) {
         animateSkillBars();
     }
+    
+    // Add click event to resume download button
+    const resumeButton = document.querySelector('.resume-btn a');
+    if (resumeButton) {
+        resumeButton.addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent default behavior
+            
+            // Provide feedback that download is starting
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Preparing Download...';
+            
+            // Fetch the PDF file and trigger download
+            fetch(this.href)
+                .then(response => response.blob())
+                .then(blob => {
+                    // Create a temporary link for downloading
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = 'Shantanu_Paithankar_Resume.pdf';
+                    link.style.display = 'none';
+                    
+                    // Add to DOM, click and remove
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // Clean up the object URL
+                    URL.revokeObjectURL(link.href);
+                })
+                .catch(error => {
+                    console.error('Download failed:', error);
+                    // Fallback: open in new tab if download fails
+                    window.open(this.href, '_blank');
+                })
+                .finally(() => {
+                    // Reset button text after a short delay
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                    }, 2000);
+                });
+        });
+    }
 });
